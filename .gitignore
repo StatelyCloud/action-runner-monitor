@@ -1,0 +1,17 @@
+!jest.config.js
+node_modules
+dist
+
+# CDK output
+.cdk.staging
+cdk.out
+
+# Environment variables
+.env*
+!.env.example
+
+# IDE specific files
+.idea
+.vscode/*
+!.vscode/launch.json
+.DS_Store

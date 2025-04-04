@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  GitHubRunnerMonitorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Timeout: 300
+      MemorySize: 512
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /github-runner-monitor/*
+  SlackInteractionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./dist/
+      Handler: slack.handler
+      Runtime: nodejs18.x
+      Timeout: 300
+      MemorySize: 512
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /github-runner-monitor/*

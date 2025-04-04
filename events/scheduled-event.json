@@ -1,0 +1,13 @@
+{
+    "version": "0",
+    "id": "53dc4d37-cffa-4f76-80c9-8b7d4a4d2eaa",
+    "detail-type": "Scheduled Event",
+    "source": "aws.events",
+    "account": "123456789012",
+    "time": "2023-04-01T00:00:00Z",
+    "region": "us-west-2",
+    "resources": [
+      "arn:aws:events:us-west-2:123456789012:rule/my-schedule"
+    ],
+    "detail": {}
+  }
