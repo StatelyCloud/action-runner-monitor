@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import {
   createClient,
+  DatabaseClient,
   OutageEvent,
   Runner,
   RunnerStatus,
@@ -8,7 +9,7 @@ import {
 import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
 import { accessKeyAuth, keyPath, SortDirection } from "@stately-cloud/client";
 import * as crypto from "crypto";
-import * as querystring from "querystring"; // Add this import
+import * as querystring from "querystring";
 
 const SSM_SLACK_SIGNING_SECRET = "/github-runner-monitor/slack-signing-secret";
 const SSM_STATELYDB_ACCESS_KEY = "/github-runner-monitor/statelydb-access-key";
@@ -66,7 +67,7 @@ async function verifySlackRequest(
   }
 }
 
-async function getStatelyClient(): Promise<ReturnType<typeof createClient>> {
+async function getStatelyClient(): Promise<DatabaseClient> {
   const [statelydbAccessKey, statelydbStoreId, statelydbRegion] =
     await Promise.all([
       ssm.send(
@@ -108,7 +109,7 @@ function getRunnerStatusText(status: RunnerStatus): string {
 }
 
 async function getRecentOutagesForRunner(
-  statelyClient: ReturnType<typeof createClient>,
+  statelyClient: DatabaseClient,
   repoId: string,
   runnerName: string,
 ): Promise<SlackBlock[]> {
@@ -178,7 +179,7 @@ async function getRecentOutagesForRunner(
 }
 
 async function getStatusForRunners(
-  statelyClient: ReturnType<typeof createClient>,
+  statelyClient: DatabaseClient,
   repoId: string,
 ): Promise<SlackBlock[]> {
   const runners: Runner[] = [];

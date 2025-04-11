@@ -255,7 +255,7 @@ You can test the Lambda function locally using AWS SAM CLI, which allows you to 
        Type: AWS::Serverless::Function
        Properties:
          CodeUri: ./dist/
-         Handler: index.handler
+         Handler: probe.handler
          Runtime: nodejs18.x
          Timeout: 300
          MemorySize: 512
