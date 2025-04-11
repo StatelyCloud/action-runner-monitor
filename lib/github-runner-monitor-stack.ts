@@ -38,7 +38,7 @@ export class GitHubRunnerMonitorStack extends cdk.Stack {
       "GitHubRunnerMonitorFunction",
       {
         runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "index.handler",
+        handler: "probe.handler",
         code: lambda.Code.fromAsset(path.join(__dirname, "../dist")),
         timeout: cdk.Duration.minutes(5),
         memorySize: 512,

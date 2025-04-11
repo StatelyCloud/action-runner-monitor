@@ -8,7 +8,7 @@ import {
 import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
 import { accessKeyAuth, keyPath, SortDirection } from "@stately-cloud/client";
 import * as crypto from "crypto";
-import * as querystring from "querystring"; // Add this import
+import * as querystring from "querystring";
 
 const SSM_SLACK_SIGNING_SECRET = "/github-runner-monitor/slack-signing-secret";
 const SSM_STATELYDB_ACCESS_KEY = "/github-runner-monitor/statelydb-access-key";

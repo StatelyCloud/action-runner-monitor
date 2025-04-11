@@ -3,9 +3,9 @@ import { build } from 'esbuild';
 const isWatch = process.argv.includes('--watch');
 
 build({
-  entryPoints: ['src/index.ts'],
+  entryPoints: ['src/probe.ts'],
   bundle: true,
-  outfile: 'dist/index.js',
+  outfile: 'dist/probe.js',
   platform: 'node',
   target: 'node18',
   format: 'cjs',

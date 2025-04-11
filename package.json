@@ -2,7 +2,7 @@
     "name": "github-runner-monitor",
     "version": "1.0.0",
     "description": "Monitor GitHub self-hosted runners and alert on unhealthy states",
-    "main": "dist/index.js",
+    "main": "dist/probe.js",
     "scripts": {
         "prebuild": "rm -rf dist",
         "build": "esbuild src/*.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outdir=dist",

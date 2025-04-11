@@ -1,4 +1,4 @@
-// index.ts - AWS Lambda function for GitHub Runner Monitoring
+// probe.ts - AWS Lambda function for GitHub Runner Monitoring
 import {
   createClient,
   Runner,
