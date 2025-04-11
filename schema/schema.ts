@@ -14,7 +14,7 @@ import {
 /**
  * Enumeration of possible runner statuses
  */
-export const RunnerStatus = enumType("RunnerStatus", {
+const RunnerStatus = enumType("RunnerStatus", {
   ONLINE: 1,
   OFFLINE: 2,
   BUSY: 3,
@@ -25,7 +25,7 @@ export const RunnerStatus = enumType("RunnerStatus", {
 /**
  * Label object to store runner capabilities/labels
  */
-export const Label = objectType("Label", {
+const Label = objectType("Label", {
   fields: {
     name: { type: string },
   },
@@ -35,7 +35,7 @@ export const Label = objectType("Label", {
  * Repository information
  * Primary grouping entity for runners
  */
-export const Repository = itemType("Repository", {
+itemType("Repository", {
   keyPath: "/repo-:repoId",
   fields: {
     // Repository identifier (owner/name format)
@@ -65,7 +65,7 @@ export const Repository = itemType("Repository", {
  * Runner information
  * Stores metadata and current status for each GitHub runner
  */
-export const Runner = itemType("Runner", {
+itemType("Runner", {
   // Multiple key paths to allow for efficient querying
   keyPath: [
     // Primary key path: Each runner belongs to a repository
@@ -116,7 +116,7 @@ export const Runner = itemType("Runner", {
 /**
  * OutageEvent records a period when a runner was in an unhealthy state
  */
-export const OutageEvent = itemType("OutageEvent", {
+itemType("OutageEvent", {
   keyPath: "/repo-:repoId/history-:runnerId/outage-:outageId",
   ttl: {
     // Outage events are retained for 30 days
@@ -171,7 +171,10 @@ export const OutageEvent = itemType("OutageEvent", {
   },
 });
 
-export const m2 = migrate(
+// Migration History
+
+// v2: Add runner name to outage event, add a ttl
+migrate(
   1,
   "Add runner name to outage event, add a ttl",
   (m) => {
