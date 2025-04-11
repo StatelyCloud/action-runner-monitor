@@ -6,10 +6,6 @@ A serverless solution to monitor the status of self-hosted GitHub runners and no
 
 This system periodically checks the status of GitHub self-hosted runners across multiple repositories and alerts via Slack when runners become unhealthy. It uses AWS Lambda for computation and StatelyDB for persistence.
 
-## Quick Links
-* GitHubRunnerMonitorFunction [Lambda](https://904140189011-6kb33aig.us-west-2.console.aws.amazon.com/lambda/home?region=us-west-2#/functions/GitHubRunnerMonitorStack-GitHubRunnerMonitorFuncti-49LV1x44b7oo?tab=code)
-* SlackInteractionFunction [Lambda](https://904140189011-6kb33aig.us-west-2.console.aws.amazon.com/lambda/home?region=us-west-2#/functions/GitHubRunnerMonitorStack-SlackInteractionFunctionA-9VbyXK7OrRTM?tab=code)
-
 ### Features
 
 - Monitor self-hosted GitHub runners across multiple repositories
