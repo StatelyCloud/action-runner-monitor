@@ -15,7 +15,7 @@ Resources:
           ORGANIZATIONS:
           GITHUB_TOKEN:
           AWS_REGION:
-          SLACK_WEBHOOK":
+          SLACK_WEBHOOK:
       CodeUri: ./dist/
       Handler: probe.handler
       Runtime: nodejs18.x
