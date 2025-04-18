@@ -1,9 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+
 Resources:
   GitHubRunnerMonitorFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Environment:
+        Variables:
+          STATELYDB_SCHEMA_ID:
+          STATELYDB_STORE_ID:
+          STATELYDB_ACCESS_KEY:
+          STATELYDB_REGION:
+          REPOS:
+          ORGANIZATIONS:
+          GITHUB_TOKEN:
+          AWS_REGION:
+          SLACK_WEBHOOK":
       CodeUri: ./dist/
       Handler: probe.handler
       Runtime: nodejs18.x

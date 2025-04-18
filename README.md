@@ -244,7 +244,26 @@ You can test the Lambda function locally using AWS SAM CLI, which allows you to 
    EOL
    ```
 
-2. Create SAM template for local testing
+2. Create a SAM-specific environment variable override file
+  ```bash
+  cat > .env.json << EOL
+  {
+    "Parameters": {
+      "STATELYDB_SCHEMA_ID": 1234,
+      "STATELYDB_STORE_ID": 1234,
+      "STATELYDB_ACCESS_KEY": "secret-here",
+      "STATELYDB_REGION": "us-east-1",
+      "REPOS": "[\"StatelyCloud/stately\"]",
+      "ORGANIZATIONS": "[\"StatelyCloud\"]",
+      "GITHUB_TOKEN": "secret-here",
+      "AWS_REGION": "us-west-2",
+      "SLACK_WEBHOOK": "secret-here"
+    }
+  }
+  EOL
+  ```
+
+3. Create SAM template for local testing
    ```bash
    cat > template.yaml << EOL
    AWSTemplateFormatVersion: '2010-09-09'
@@ -264,7 +283,7 @@ You can test the Lambda function locally using AWS SAM CLI, which allows you to 
    EOL
    ```
 
-3. Invoke the Lambda function locally
+4. Invoke the Lambda function locally
    ```bash
    # Ensure AWS_PROFILE is set if you're using named profiles
    export AWS_PROFILE=your-profile-name
@@ -275,7 +294,7 @@ You can test the Lambda function locally using AWS SAM CLI, which allows you to 
      --region $(grep AWS_REGION .env.dev | cut -d= -f2)
    ```
 
-4. Debug the Lambda function with VS Code
+5. Debug the Lambda function with VS Code
    - Create a `.vscode/launch.json` file:
    ```json
    {
