@@ -19,6 +19,7 @@ const SSM_STATELYDB_STORE_ID = "/github-runner-monitor/statelydb-store-id";
 const SSM_STATELYDB_REGION = "/github-runner-monitor/statelydb-region";
 const SSM_REPOSITORIES = "/github-runner-monitor/repositories";
 const SSM_SLACK_WEBHOOK = "/github-runner-monitor/slack-webhook";
+const SSM_ORGANIZATIONS = "/github-runner-monitor/organizations";
 
 // Initialize the SSM client
 const ssm = new SSMClient();
@@ -282,6 +283,7 @@ async function fetchSSMParameters() {
         SSM_STATELYDB_REGION,
         SSM_REPOSITORIES,
         SSM_SLACK_WEBHOOK,
+        SSM_ORGANIZATIONS,
       ],
       WithDecryption: true,
     }),
@@ -302,6 +304,7 @@ async function fetchSSMParameters() {
     statelydbRegion: getParameter(SSM_STATELYDB_REGION),
     repositories: getParameter(SSM_REPOSITORIES),
     slackWebhook: getParameter(SSM_SLACK_WEBHOOK),
+    organizations: getParameter(SSM_ORGANIZATIONS),
   };
 }
 

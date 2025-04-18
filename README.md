@@ -192,7 +192,10 @@ github-runner-monitor/
 
    aws ssm put-parameter --name "/github-runner-monitor/repositories" \
      --type String --value '["owner/repo1", "owner/repo2"]'
-   
+
+   aws ssm put-parameter --name "/github-runner-monitor/organizations" \
+     --type String --value '["owner"]'
+
    aws ssm put-parameter --name "/github-runner-monitor/slack-webhook" \
      --type SecureString --value "https://hooks.slack.com/services/your/webhook/url"
 
