@@ -19,6 +19,7 @@ const SSM_STATELYDB_STORE_ID = "/github-runner-monitor/statelydb-store-id";
 const SSM_STATELYDB_REGION = "/github-runner-monitor/statelydb-region";
 const SSM_REPOSITORIES = "/github-runner-monitor/repositories";
 const SSM_SLACK_WEBHOOK = "/github-runner-monitor/slack-webhook";
+const SSM_ORGANIZATIONS = "/github-runner-monitor/organizations";
 
 // Initialize the SSM client
 const ssm = new SSMClient();
@@ -54,6 +55,7 @@ export const handler = async (_event: Record<string, unknown>) => {
       statelydbStoreId: params.statelydbStoreId,
       statelydbRegion: params.statelydbRegion,
       repositories: params.repositories,
+      organizations: params.organizations,
     });
 
     // Initialize StatelyDB client
@@ -99,9 +101,18 @@ export const handler = async (_event: Record<string, unknown>) => {
           await statelyClient.put(repository);
         }
 
-        // Fetch runners from GitHub API
-        const runners = await fetchGitHubRunners(repo, params.githubToken);
+        // Fetch runners from GitHub API for Repositories
+        const runners = await fetchGitHubRunnersForRepository(repo, params.githubToken);
         console.log(`Found ${runners.length} runners for repository ${repoId}`);
+
+        // Fetch runners from GitHub API for Organizations
+        const organizations = JSON.parse(params.organizations);
+        for (const org of organizations) {
+          const orgRunners = await fetchGitHubRunnersForOrganization(org, params.githubToken);
+          console.log(`Found ${orgRunners.length} runners for organization ${org}`);
+          runners.push(...orgRunners);
+        }
+        console.log(`Total runners after merging: ${runners.length}`);
 
         // Get existing runners from StatelyDB
         const existingRunners = await fetchExistingRunners(
@@ -260,9 +271,10 @@ export const handler = async (_event: Record<string, unknown>) => {
 /**
  * Fetch all SSM parameters needed for the function
  */
-async function fetchSSMParameters() {
+async function fetchSSMParameters() { 
+
   if (process.env.AWS_SAM_LOCAL) {
-    // Return mock parameters for local testing
+    console.log("Running in local mode, using environment variables");
     return {
       githubToken: process.env.GITHUB_TOKEN,
       statelydbAccessKey: process.env.STATELYDB_ACCESS_KEY,
@@ -270,6 +282,7 @@ async function fetchSSMParameters() {
       statelydbRegion: process.env.STATELYDB_REGION,
       repositories: process.env.REPOS,
       slackWebhook: process.env.SLACK_WEBHOOK,
+      organizations: process.env.ORGANIZATIONS,
     };
   }
 
@@ -282,6 +295,7 @@ async function fetchSSMParameters() {
         SSM_STATELYDB_REGION,
         SSM_REPOSITORIES,
         SSM_SLACK_WEBHOOK,
+        SSM_ORGANIZATIONS,
       ],
       WithDecryption: true,
     }),
@@ -302,30 +316,72 @@ async function fetchSSMParameters() {
     statelydbRegion: getParameter(SSM_STATELYDB_REGION),
     repositories: getParameter(SSM_REPOSITORIES),
     slackWebhook: getParameter(SSM_SLACK_WEBHOOK),
+    organizations: getParameter(SSM_ORGANIZATIONS),
   };
 }
 
 /**
- * Fetch runners for a repository from GitHub API
+ * Fetch runners for a Github Repository
+ * @param repo - The repository in the format "owner/repo"
+ * @param githubToken - The GitHub token for authentication
+ * @returns A promise that resolves to an array of GitHub runners
  */
-async function fetchGitHubRunners(
+async function fetchGitHubRunnersForRepository(
   repo: string,
   githubToken: string,
 ): Promise<GitHubRunner[]> {
   try {
-    const response = await axios.get(
+    return await fetchGitHubRunnersFromEndpoint(
       `https://api.github.com/repos/${repo}/actions/runners`,
-      {
-        headers: {
-          Authorization: `token ${githubToken}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      },
+      githubToken,
     );
-
-    return response.data.runners;
   } catch (error) {
     console.error(`Error fetching runners for repository ${repo}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch runners for a GitHub Organization
+ * @param org - The organization name
+ * @param githubToken - The GitHub token for authentication
+ * @returns A promise that resolves to an array of GitHub runners
+ */
+async function fetchGitHubRunnersForOrganization(
+  org: string,
+  githubToken: string,
+): Promise<GitHubRunner[]> {
+  try {
+    return await fetchGitHubRunnersFromEndpoint(
+      `https://api.github.com/orgs/${org}/actions/runners`,
+      githubToken,
+    );
+  } catch (error) {
+    console.error(`Error fetching runners for organization ${org}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch runners for a given GitHub API endpoint
+ * @param endpoint - The GitHub API endpoint
+ * @param githubToken - The GitHub token for authentication
+ * @returns A promise that resolves to an array of GitHub runners
+ */
+async function fetchGitHubRunnersFromEndpoint(
+  endpoint: string,
+  githubToken: string,
+): Promise<GitHubRunner[]> {
+  try {
+    const response = await axios.get(endpoint, {
+      headers: {
+        Authorization: `token ${githubToken}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+    return response.data.runners;
+  } catch (error) {
+    console.error(`Error fetching runners from ${endpoint}:`, error);
     throw error;
   }
 }
