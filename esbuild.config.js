@@ -1,14 +1,14 @@
-import { build } from 'esbuild';
+import { build } from "esbuild";
 
-const isWatch = process.argv.includes('--watch');
+const isWatch = process.argv.includes("--watch");
 
 build({
-  entryPoints: ['src/probe.ts'],
+  entryPoints: ["src/index.ts"],
   bundle: true,
-  outfile: 'dist/probe.js',
-  platform: 'node',
-  target: 'node18',
-  format: 'cjs',
+  outfile: "dist/index.js",
+  platform: "node",
+  target: "node18",
+  format: "cjs",
   watch: isWatch,
   minify: false,
   sourcemap: true,
