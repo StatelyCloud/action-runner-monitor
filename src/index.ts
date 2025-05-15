@@ -150,7 +150,7 @@ async function handleMissingRunners(
   statelyClient: DatabaseClient,
   params: SSMParams,
   githubRunners: Map<number, GitHubRunner>,
-  statelyRunners: Map<BigInt, Runner>,
+  statelyRunners: Map<bigint, Runner>,
 ) {
   // Check for missing runners (runners that exist in our DB but weren't returned by GitHub)
   const missingRunners = [...statelyRunners.values()].filter(

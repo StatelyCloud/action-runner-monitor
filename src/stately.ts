@@ -24,8 +24,8 @@ export const UNHEALTHY_STATUSES = [
 export async function fetchAllStatelyRunners(
   client: DatabaseClient,
   repoId: string,
-): Promise<Map<BigInt, Runner>> {
-  const runners = new Map<BigInt, Runner>();
+): Promise<Map<bigint, Runner>> {
+  const runners = new Map<bigint, Runner>();
 
   // List all runners for this repository
   for await (const item of client.beginList(`/repo-${repoId}/runner-`)) {
