@@ -35,9 +35,9 @@ export async function fetchSSMParameters(): Promise<SSMParams> {
       statelydbAccessKey: process.env.STATELYDB_ACCESS_KEY!,
       statelydbStoreId: BigInt(process.env.STATELYDB_STORE_ID!),
       statelydbRegion: process.env.STATELYDB_REGION!,
-      repositories: JSON.parse(process.env.REPOS!),
+      repositories: JSON.parse(process.env.GITHUB_REPOS!),
       slackWebhook: process.env.SLACK_WEBHOOK,
-      organizations: JSON.parse(process.env.ORGANIZATIONS!),
+      organizations: JSON.parse(process.env.GITHUB_ORGANIZATIONS!),
     };
     // Display debugging info
     console.log("Fetched parameters:", {

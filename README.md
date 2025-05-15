@@ -253,8 +253,8 @@ You can test the Lambda function locally using AWS SAM CLI, which allows you to 
       "STATELYDB_STORE_ID": 1234,
       "STATELYDB_ACCESS_KEY": "secret-here",
       "STATELYDB_REGION": "us-east-1",
-      "REPOS": "[\"StatelyCloud/stately\"]",
-      "ORGANIZATIONS": "[\"StatelyCloud\"]",
+      "GITHUB_REPOS": "[\"StatelyCloud/stately\"]",
+      "GITHUB_ORGANIZATIONS": "[\"StatelyCloud\"]",
       "GITHUB_TOKEN": "secret-here",
       "AWS_REGION": "us-west-2",
       "SLACK_WEBHOOK": "secret-here"

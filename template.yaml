@@ -11,8 +11,8 @@ Resources:
           STATELYDB_STORE_ID:
           STATELYDB_ACCESS_KEY:
           STATELYDB_REGION:
-          REPOS:
-          ORGANIZATIONS:
+          GITHUB_REPOS:
+          GITHUB_ORGANIZATIONS:
           GITHUB_TOKEN:
           AWS_REGION:
           SLACK_WEBHOOK:

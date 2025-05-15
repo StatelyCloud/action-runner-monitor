@@ -122,7 +122,7 @@ async function fetchGitHubRunnersFromEndpoint(
  * @param githubRunner - The GitHub runner object to map the status from
  * @returns The corresponding RunnerStatus enum value
  */
-export function mapGitHubStatus(githubRunner: GitHubRunner): number {
+export function mapGitHubStatus(githubRunner: GitHubRunner): RunnerStatus {
   // Handle offline first
   if (githubRunner.status !== "online") {
     return RunnerStatus.RunnerStatus_OFFLINE;
