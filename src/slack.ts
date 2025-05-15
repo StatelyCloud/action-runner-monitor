@@ -222,6 +222,12 @@ async function getStatusForRunners(
   return blocks;
 }
 
+/**
+ * Lambda handler for Slack slash commands
+ * Processes incoming Slack slash commands and returns appropriate responses
+ * @param event - The API Gateway proxy event containing the Slack command
+ * @returns A promise that resolves to the API Gateway proxy result
+ */
 export const handler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
@@ -312,7 +318,10 @@ export const handler = async (
 };
 
 /**
- * Send outage notification to Slack
+ * Sends a notification to Slack when a GitHub runner has an outage
+ * @param slackWebhook - The Slack webhook URL to send the notification to
+ * @param runner - The runner object with the outage
+ * @param outageId - The ID of the outage event
  */
 export async function sendSlackOutageNotification(
   slackWebhook: string,
@@ -369,7 +378,10 @@ export async function sendSlackOutageNotification(
 }
 
 /**
- * Send recovery notification to Slack
+ * Sends a notification to Slack when a GitHub runner has recovered from an outage
+ * @param slackWebhook - The Slack webhook URL to send the notification to
+ * @param runner - The runner object that has recovered
+ * @param outage - The outage event that has been resolved
  */
 export async function sendSlackRecoveryNotification(
   slackWebhook: string,

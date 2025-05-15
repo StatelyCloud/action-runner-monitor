@@ -6,14 +6,20 @@ import {
   RunnerStatus,
 } from "./schema/index";
 
-// Statuses that are considered "unhealthy"
+/**
+ * List of runner statuses that are considered unhealthy
+ * Used to determine when to create outage events and send notifications
+ */
 export const UNHEALTHY_STATUSES = [
   RunnerStatus.RunnerStatus_OFFLINE,
   RunnerStatus.RunnerStatus_UNKNOWN,
 ];
 
 /**
- * Fetch existing runners from StatelyDB for a repository
+ * Fetches all existing runners from StatelyDB for a given repository
+ * @param client - The StatelyDB client
+ * @param repoId - The ID of the repository to fetch runners for
+ * @returns A promise that resolves to a Map of runner IDs to runner objects
  */
 export async function fetchAllStatelyRunners(
   client: DatabaseClient,
@@ -31,6 +37,12 @@ export async function fetchAllStatelyRunners(
   return runners;
 }
 
+/**
+ * Creates a new outage event for a runner in StatelyDB
+ * @param client - The StatelyDB client
+ * @param runner - The runner with the outage
+ * @returns A promise that resolves to the created OutageEvent
+ */
 export async function createOutageEvent(
   client: DatabaseClient,
   runner: Runner,
@@ -54,7 +66,11 @@ export async function createOutageEvent(
 }
 
 /**
- * Resolve any existing outages for a runner
+ * Resolves any existing outage events for a runner when it recovers
+ * @param client - The StatelyDB client
+ * @param runner - The runner that has recovered
+ * @returns A promise that resolves to the resolved OutageEvent
+ * @throws Error if no ongoing outage is found for the runner
  */
 export async function resolveOutageEvent(
   client: DatabaseClient,
@@ -79,7 +95,9 @@ export async function resolveOutageEvent(
 }
 
 /**
- * Convert status enum value to string
+ * Converts a runner status enum value to a readable string
+ * @param runnerStatus - The runner status enum value
+ * @returns A human-readable string representation of the status
  */
 export function statusToString(runnerStatus: RunnerStatus): string {
   switch (runnerStatus) {
@@ -98,6 +116,12 @@ export function statusToString(runnerStatus: RunnerStatus): string {
   }
 }
 
+/**
+ * Ensures a repository exists in StatelyDB, creating it if necessary
+ * @param statelyClient - The StatelyDB client
+ * @param repo - The repository name in the format "owner/repo"
+ * @returns A promise that resolves to the repository object
+ */
 export async function ensureStatelyRepo(
   statelyClient: DatabaseClient,
   repo: string,

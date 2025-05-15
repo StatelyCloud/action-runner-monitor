@@ -20,7 +20,10 @@ import {
 } from "./stately";
 
 /**
- * Main Lambda handler function
+ * Main Lambda handler function for GitHub runner monitoring
+ * Fetches parameters, initializes the StatelyDB client, and processes each repository
+ * @param _event - AWS Lambda event object
+ * @returns A promise that resolves to the Lambda response with a status code and body
  */
 export const handler = async (_event: Record<string, unknown>) => {
   console.log("Starting GitHub runner monitoring process");

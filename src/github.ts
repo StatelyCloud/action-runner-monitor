@@ -2,6 +2,10 @@ import axios from "axios";
 import { SSMParams } from "./config";
 import { RunnerStatus } from "./schema/index";
 
+/**
+ * Represents a GitHub Actions runner with its properties
+ * Contains information about a runner's status, attributes, and configuration
+ */
 export interface GitHubRunner {
   id: number;
   name: string;
@@ -12,6 +16,12 @@ export interface GitHubRunner {
   enabled: boolean;
 }
 
+/**
+ * Fetches all GitHub runners from both repositories and organizations
+ * @param repo - The repository in the format "owner/repo"
+ * @param params - The SSM parameters containing GitHub token and organizations list
+ * @returns A promise that resolves to a Map of runner IDs to GitHubRunner objects
+ */
 export async function fetchAllGithubRunners(
   repo: string,
   params: SSMParams,
@@ -108,7 +118,9 @@ async function fetchGitHubRunnersFromEndpoint(
 }
 
 /**
- * Map GitHub runner status to our RunnerStatus enum
+ * Maps a GitHub runner's status to our internal RunnerStatus enum
+ * @param githubRunner - The GitHub runner object to map the status from
+ * @returns The corresponding RunnerStatus enum value
  */
 export function mapGitHubStatus(githubRunner: GitHubRunner): number {
   // Handle offline first

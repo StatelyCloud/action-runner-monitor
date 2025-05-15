@@ -10,6 +10,10 @@ const SSM_REPOSITORIES = "/github-runner-monitor/repositories";
 const SSM_SLACK_WEBHOOK = "/github-runner-monitor/slack-webhook";
 const SSM_ORGANIZATIONS = "/github-runner-monitor/organizations";
 
+/**
+ * Configuration parameters retrieved from SSM Parameter Store
+ * Contains all necessary credentials and settings for the application
+ */
 export type SSMParams = {
   githubToken: string;
   statelydbAccessKey: string;
