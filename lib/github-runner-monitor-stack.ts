@@ -1,11 +1,13 @@
 // lib/github-runner-monitor-stack.ts
 import * as cdk from "aws-cdk-lib";
+import {
+  aws_apigateway as apigateway,
+  aws_events as events,
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_events_targets as targets,
+} from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { aws_lambda as lambda } from "aws-cdk-lib";
-import { aws_iam as iam } from "aws-cdk-lib";
-import { aws_events as events } from "aws-cdk-lib";
-import { aws_events_targets as targets } from "aws-cdk-lib";
-import { aws_apigateway as apigateway } from "aws-cdk-lib";
 import * as path from "path";
 
 export class GitHubRunnerMonitorStack extends cdk.Stack {
@@ -38,7 +40,7 @@ export class GitHubRunnerMonitorStack extends cdk.Stack {
       "GitHubRunnerMonitorFunction",
       {
         runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "probe.handler",
+        handler: "index.handler",
         code: lambda.Code.fromAsset(path.join(__dirname, "../dist")),
         timeout: cdk.Duration.minutes(5),
         memorySize: 512,

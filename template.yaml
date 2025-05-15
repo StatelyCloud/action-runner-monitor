@@ -11,13 +11,13 @@ Resources:
           STATELYDB_STORE_ID:
           STATELYDB_ACCESS_KEY:
           STATELYDB_REGION:
-          REPOS:
-          ORGANIZATIONS:
+          GITHUB_REPOS:
+          GITHUB_ORGANIZATIONS:
           GITHUB_TOKEN:
           AWS_REGION:
           SLACK_WEBHOOK:
       CodeUri: ./dist/
-      Handler: probe.handler
+      Handler: index.handler
       Runtime: nodejs18.x
       Timeout: 300
       MemorySize: 512

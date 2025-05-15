@@ -1,4 +1,9 @@
+import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
+import { accessKeyAuth, keyPath, SortDirection } from "@stately-cloud/client";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
+import axios from "axios";
+import * as crypto from "crypto";
+import * as querystring from "querystring";
 import {
   createClient,
   DatabaseClient,
@@ -6,10 +11,7 @@ import {
   Runner,
   RunnerStatus,
 } from "./schema/index";
-import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
-import { accessKeyAuth, keyPath, SortDirection } from "@stately-cloud/client";
-import * as crypto from "crypto";
-import * as querystring from "querystring";
+import { statusToString } from "./stately";
 
 const SSM_SLACK_SIGNING_SECRET = "/github-runner-monitor/slack-signing-secret";
 const SSM_STATELYDB_ACCESS_KEY = "/github-runner-monitor/statelydb-access-key";
@@ -220,6 +222,12 @@ async function getStatusForRunners(
   return blocks;
 }
 
+/**
+ * Lambda handler for Slack slash commands
+ * Processes incoming Slack slash commands and returns appropriate responses
+ * @param event - The API Gateway proxy event containing the Slack command
+ * @returns A promise that resolves to the API Gateway proxy result
+ */
 export const handler = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
@@ -308,3 +316,123 @@ export const handler = async (
     };
   }
 };
+
+/**
+ * Sends a notification to Slack when a GitHub runner has an outage
+ * @param slackWebhook - The Slack webhook URL to send the notification to
+ * @param runner - The runner object with the outage
+ * @param outageId - The ID of the outage event
+ */
+export async function sendSlackOutageNotification(
+  slackWebhook: string,
+  runner: Runner,
+  outageId: bigint,
+) {
+  const statusText = statusToString(runner.status);
+
+  const message = {
+    text: `🚨 GitHub Runner Alert 🚨`,
+    blocks: [
+      {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: `🚨 GitHub Runner Alert: ${statusText} 🚨`,
+        },
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: `*Repository:*\n${runner.repoId}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Runner:*\n${runner.name}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Status:*\n${statusText}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Outage ID:*\n${outageId}`,
+          },
+        ],
+      },
+      {
+        type: "context",
+        elements: [
+          {
+            type: "mrkdwn",
+            text: `Detected at ${new Date().toISOString()}`,
+          },
+        ],
+      },
+    ],
+  };
+
+  await axios.post(slackWebhook, message);
+  console.log(`Sent Slack notification for runner ${runner.name}`);
+}
+
+/**
+ * Sends a notification to Slack when a GitHub runner has recovered from an outage
+ * @param slackWebhook - The Slack webhook URL to send the notification to
+ * @param runner - The runner object that has recovered
+ * @param outage - The outage event that has been resolved
+ */
+export async function sendSlackRecoveryNotification(
+  slackWebhook: string,
+  runner: Runner,
+  outage: OutageEvent,
+) {
+  const statusText = statusToString(runner.status);
+
+  const message = {
+    text: `✅ GitHub Runner Recovery`,
+    blocks: [
+      {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: `✅ GitHub Runner Recovered: ${statusText}`,
+        },
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: `*Repository:*\n${runner.repoId}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Runner:*\n${runner.name}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*New Status:*\n${statusText}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Resolved Outage:*\n${outage.outageId}`,
+          },
+        ],
+      },
+      {
+        type: "context",
+        elements: [
+          {
+            type: "mrkdwn",
+            text: `Recovered at ${new Date().toISOString()}`,
+          },
+        ],
+      },
+    ],
+  };
+
+  await axios.post(slackWebhook, message);
+  console.log(`Sent Slack recovery notification for runner ${runner.name}`);
+}

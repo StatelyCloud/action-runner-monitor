@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const globals = require('globals');
+const eslint = require("@eslint/js");
+const tseslint = require("typescript-eslint");
+const globals = require("globals");
 
 module.exports = tseslint.config(
   {
@@ -37,13 +37,13 @@ module.exports = tseslint.config(
       ],
     },
   },
-   // Node.js config for .js config files
+  // Node.js config for .js config files
   {
-    files: ['**/*.config.js', '**/esbuild.*.js'],
+    files: ["**/*.config.js", "**/esbuild.*.js"],
     languageOptions: {
       globals: {
-        ...globals.node
-      }
-    }
-  }
+        ...globals.node,
+      },
+    },
+  },
 );
